@@ -24,19 +24,25 @@ export default {
   },
   methods: {
     async getAnswer() {
-      this.answer = "Pensando...";
+      try {
+        this.answer = "Pensando...";
 
-      const { answer, image } = await fetch(
-        `https://yesno.wtf/api`
-      ).then((resp) => resp.json());
+        const { answer, image } = await fetch(
+          `https://yesno.wtf/api`
+        ).then((resp) => resp.json());
 
-      this.answer = answer === "yes" ? "Si!" : "No!";
-      this.img = image;
+        this.answer = answer === "yes" ? "Si!" : "No!";
+        this.img = image;
+      } catch (error) {
+        this.answer = "No se pudo cargar el API";
+        this.img = null;
+      }
     },
   },
   watch: {
     question(value, oldValue) {
       this.isValidQuestion = false;
+      console.log(value);
       if (!value.includes("?")) return;
       this.getAnswer();
       this.isValidQuestion = true;
